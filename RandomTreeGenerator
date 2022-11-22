@@ -1,0 +1,150 @@
+"""
+Creates a random tree based off of a list of values provided.
+"""
+
+import random
+
+
+class Node:
+
+    def __init__(self, value: str) -> None:
+        """
+        Creates a node based off the name provided.
+        Sets up 4 paths from this node.
+            -each path has the possibility to be given a value
+
+        :param: value: A name passed into the Node class.
+        """
+        self.value = value  # The value at this node
+        self.left = None  # Node to the left
+        self.top = None  # Node above
+        self.right = None  # Node to the right
+        self.bottom = None  # Node below
+
+
+class Tree:
+    def __init__(self) -> None:
+        """
+        Sets root value of tree to None
+
+        Creates a list of names
+            -One editable
+            -One not editable
+
+        :returns: None
+        """
+        self.root = None
+
+        self.names_const = ["Nikole", "Jenny", "Steve", "Tyler", "Joseph", "Mathew"]
+        self.names_editable = ["Nikole", "Jenny", "Steve", "Tyler", "Joseph", "Mathew"]
+
+    def set_root(self) -> None:
+        """
+        If the list has at least one value,
+        Takes a random value from the names_const list.
+        Assigns the random value to self.root.
+
+        :return: None
+        """
+        if len(self.names_const) != 0:
+            random_index = random.randint(0, len(self.names_const) - 1)
+            self.root = Node(self.names_const[random_index])
+            self.names_editable.pop(random_index)
+
+    def create_tree(self) -> None:
+        """
+        Picks a random name from the list.
+        Picks a direction.
+        Assigns Node(of the random name) to that direction of the root node.
+        If there is a value already there, re-picks a direction off of the node already connected.
+        Connects the Node(of random name) to that node.
+        Removes that value from the list.
+
+        :returns: None
+        """
+
+        # Node currently on
+        current = self.root
+
+        # gather an index and direction
+        random_index = random.randint(0, len(self.names_editable) - 1)
+        direction = random.randint(1, 4)
+
+        # While there are still values in the list
+        while len(self.names_editable) != 0:
+
+            # direction 1 = left
+            if direction == 1:
+                # if a node already exists in this direction
+                if current.left:
+                    # set the current node to the node in this direction
+                    current = current.left
+                    # pick a new direction
+                    direction = random.randint(1, 4)
+                    # on loop, the node-to-add will be added to the new current node in the direction picked
+
+                # if a node does not exist in this direction
+                elif current.left is None:
+                    # set the node in that direction to the random_index value selected previously
+                    current.left = Node(self.names_editable[random_index])
+                    # make sure the node added has a link back to current
+                    current.left.right = current
+                    # remove this value from the list
+                    self.names_editable.pop(random_index)
+                    # set the current node back to the root
+                    current = self.root
+                    # if the list is not empty pick a new index
+                    if len(self.names_editable) != 0:
+                        random_index = random.randint(0, len(self.names_editable) - 1)
+                    # pick a new direction
+                    direction = random.randint(1, 4)
+                    # on loop, starts back over at the root with a new value to add
+
+            # direction 2 = top
+            elif direction == 2:
+                if current.top:
+                    current = current.top
+                    direction = random.randint(1, 4)
+                elif current.top is None:
+                    current.top = Node(self.names_editable[random_index])
+                    # make sure the node added has a link back to current
+                    current.top.bottom = current
+                    self.names_editable.pop(random_index)
+                    current = self.root
+                    if len(self.names_editable) != 0:
+                        random_index = random.randint(0, len(self.names_editable) - 1)
+                    direction = random.randint(1, 4)
+
+            # direction 3 = right
+            elif direction == 3:
+                if current.right:
+                    current = current.right
+                    direction = random.randint(1, 4)
+                elif current.right is None:
+                    current.right = Node(self.names_editable[random_index])
+                    # make sure the node added has a link back to current
+                    current.right.left = current
+                    self.names_editable.pop(random_index)
+                    current = self.root
+                    if len(self.names_editable) != 0:
+                        random_index = random.randint(0, len(self.names_editable) - 1)
+                    direction = random.randint(1, 4)
+
+            # direction 4 = bottom
+            elif direction == 4:
+                if current.bottom:
+                    current = current.bottom
+                    direction = random.randint(1, 4)
+                elif current.bottom is None:
+                    current.bottom = Node(self.names_editable[random_index])
+                    # make sure the node added has a link back to current
+                    current.bottom.top = current
+                    self.names_editable.pop(random_index)
+                    current = self.root
+                    if len(self.names_editable) != 0:
+                        random_index = random.randint(0, len(self.names_editable) - 1)
+                    direction = random.randint(1, 4)
+
+tree = Tree()
+tree.set_root()
+tree.create_tree()
