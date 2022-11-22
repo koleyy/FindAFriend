@@ -1,0 +1,121 @@
+"""
+Uses RandomTreeGenerator.py to create a randomized Tree based off of given values.
+Picks a starting and ending node.
+Has a user traverse the tree until they reach the end node.
+Score : How many clicks it took to reach the end.
+"""
+import RandomTreeGenerator
+import random
+
+
+def display() -> None:
+    """
+    Output Print Statement
+
+    :returns: None
+    """
+
+    global choice
+
+    top = "top"
+    left = "left -"
+    right = "- right"
+    bottom = "bottom"
+
+    # if the value doesn't exist, remove that direction from the options
+    if current.top is None:
+        top = "   "
+    if current.left is None:
+        left = "    "
+    if current.right is None:
+        right = "     "
+    if current.bottom is None:
+        bottom = "      "
+
+    # display current and optional directions
+    print(f"        {top}        ")
+    print(f"{left}  {current.value} {right}")
+    print(f"       {bottom}       ")
+    print()
+
+
+def move():
+    global current
+    global choice
+    global score
+
+    choice = input("Where would you like to go?: ").strip().lower()
+
+    while True:
+        if choice == "left":
+            # if there is a node to the left, move to that node and break the loop
+            if current.left:
+                current = current.left
+                break
+            # if there isn't a node to the left, invalid selection, prompt again
+            elif current.left is None:
+                choice = input(f"There is no one to the left of {current.value}, "
+                               f"please pick another direction: ").strip().lower()
+        elif choice == "top":
+            if current.top:
+                current = current.top
+                break
+            elif current.top is None:
+                choice = input(f"There is no one above {current.value}, "
+                               f"please pick another direction: ").strip().lower()
+        elif choice == "right":
+            if current.right:
+                current = current.right
+                break
+            elif current.right is None:
+                choice = input(f"There is no one to the right of {current.value}, "
+                               f"please pick another direction: ").strip().lower()
+        elif choice == "bottom":
+            if current.bottom:
+                current = current.bottom
+                break
+            elif current.bottom is None:
+                choice = input(f"There is no one below {current.value}, "
+                               f"please pick another direction: ").strip().lower()
+
+    # every time the user moves, increase score by 1
+    score += 1
+
+
+def check_for_win():
+    # if the current node is the endingNode
+    if current.value == endingNode:
+        # display the ending node one last time
+        display()
+
+        # decides if move(s) should be plural in the win statement
+        s = ''
+        if score > 1:
+            s = 's'
+
+        print("YOU WIN\n"
+              f"It took you {score} move{s} to find {current.value}")
+        exit()
+
+
+# sets the starting node to the trees root
+startingNode = RandomTreeGenerator.tree.root
+# picks a random name out of the list to be the ending node
+endingNode = RandomTreeGenerator.tree.names_const[random.randint(0, len(RandomTreeGenerator.tree.names_const)-1)]
+while endingNode == startingNode.value:
+    endingNode = RandomTreeGenerator.tree.names_const[random.randint(0, len(RandomTreeGenerator.tree.names_const)-1)]
+
+# starting values
+current = RandomTreeGenerator.tree.root
+choice = ''
+score = 0
+
+# print welcome banner
+print("Welcome to FindAFriend\n"
+      f"Navigate through the tree to find {endingNode}")
+
+# game loop
+while True:
+    display()
+    move()
+    check_for_win()
