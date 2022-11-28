@@ -10,17 +10,17 @@ import random
 
 def display() -> None:
     """
-    Output Print Statement
+    Displays the current node and all surrounding nodes.
 
     :returns: None
     """
 
     global choice
 
-    top = "top"
+    top = "up"
     left = "left -"
     right = "- right"
-    bottom = "bottom"
+    bottom = "down"
 
     # if the value doesn't exist, remove that direction from the options
     if current.top is None:
@@ -39,7 +39,13 @@ def display() -> None:
     print()
 
 
-def move():
+def move() -> None:
+    """
+    Prompts the user to pick a direction.
+    Upon receiving a direction, changes the node in that direction to the new current node.
+
+    :return: None
+    """
     global current
     global choice
     global score
@@ -56,7 +62,7 @@ def move():
             elif current.left is None:
                 choice = input(f"There is no one to the left of {current.value}, "
                                f"please pick another direction: ").strip().lower()
-        elif choice == "top":
+        elif choice == "up":
             if current.top:
                 current = current.top
                 break
@@ -70,7 +76,7 @@ def move():
             elif current.right is None:
                 choice = input(f"There is no one to the right of {current.value}, "
                                f"please pick another direction: ").strip().lower()
-        elif choice == "bottom":
+        elif choice == "down":
             if current.bottom:
                 current = current.bottom
                 break
@@ -82,7 +88,13 @@ def move():
     score += 1
 
 
-def check_for_win():
+def check_for_win() -> None:
+    """
+    Checks if the current value is the ending node.
+    If found, shows ending banner and score, ends program.
+
+    :return: None
+    """
     # if the current node is the endingNode
     if current.value == endingNode:
         # display the ending node one last time
